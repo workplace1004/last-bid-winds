@@ -1,0 +1,596 @@
+:root {
+  color-scheme: dark;
+  --bg: #1c1210;
+  --surface: #2b1d19;
+  --surface-2: #3b2a24;
+  --line: #5a4238;
+  --text: #f8f1e7;
+  --muted: #c4b3a4;
+  --accent: #e8b34b;
+  --accent-hover: #f2c870;
+  --danger: #ff7b6b;
+  --gain: #7ddc8f;
+  --ink: #1a100c;
+  --p0: #ff8a7a;
+  --p1: #6cc0ff;
+  --p2: #ffd95e;
+  --p3: #6fdc85;
+  --p4: #d3a1ff;
+  --p5: #eeeeee;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.45;
+}
+
+h1,
+h2,
+p,
+ol,
+ul {
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+:focus-visible {
+  outline: 3px solid var(--text);
+  outline-offset: 2px;
+}
+
+.screen {
+  margin: 0 auto;
+  padding: 24px 16px 32px;
+}
+
+.narrow {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 440px;
+}
+
+.brand {
+  padding: 24px 0 8px;
+}
+
+.brand h1 {
+  color: var(--accent);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.4rem, 12vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.brand p {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+input {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+input::placeholder {
+  color: var(--muted);
+}
+
+#code {
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.primary,
+.secondary {
+  min-height: 48px;
+  padding: 10px 18px;
+  font-weight: 700;
+}
+
+.primary {
+  background: var(--accent);
+  color: var(--ink);
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.primary:disabled,
+.secondary:disabled {
+  background: var(--surface-2);
+  color: var(--muted);
+}
+
+.secondary {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.secondary:hover:not(:disabled) {
+  background: var(--line);
+}
+
+.text {
+  align-self: center;
+  min-height: 44px;
+  padding: 8px 14px;
+  background: none;
+  color: var(--muted);
+  text-decoration: underline;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.divider::before,
+.divider::after {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+  content: "";
+}
+
+.join-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 10px;
+}
+
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.room-code {
+  margin-top: -14px;
+  font-size: 3.6rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  line-height: 1.2;
+  text-align: center;
+  text-indent: 0.14em;
+}
+
+.panel {
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.panel h2 {
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+#player-count {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.rules {
+  display: grid;
+  gap: 6px;
+  padding-left: 22px;
+}
+
+.lobby-players,
+.scores,
+.history,
+.bid-log {
+  display: grid;
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.lobby-players li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.player-name {
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tag {
+  flex: none;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.badge {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: var(--color);
+  color: var(--ink);
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.center {
+  text-align: center;
+}
+
+.slot-0 { --color: var(--p0); }
+.slot-1 { --color: var(--p1); }
+.slot-2 { --color: var(--p2); }
+.slot-3 { --color: var(--p3); }
+.slot-4 { --color: var(--p4); }
+.slot-5 { --color: var(--p5); }
+
+/* Game */
+.game {
+  display: grid;
+  gap: 16px;
+  max-width: 980px;
+  padding-top: 12px;
+}
+
+.auction,
+.floor {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.lot {
+  display: grid;
+  justify-items: center;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  text-align: center;
+}
+
+.lot-icon {
+  font-size: clamp(3rem, 14vw, 4.5rem);
+  line-height: 1.2;
+}
+
+.lot-name {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+/* A fixed line height, so the reveal does not move the bid buttons. */
+#lot-estimate {
+  margin-top: 2px;
+  line-height: 1.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+#lot-estimate.revealed {
+  color: var(--gain);
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.price {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.price-amount {
+  font-size: clamp(2.6rem, 13vw, 3.6rem);
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.floor.sold .price-amount {
+  color: var(--accent);
+}
+
+.status {
+  min-height: 1.5em;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.status.mine,
+.result-text.mine {
+  color: var(--accent);
+}
+
+.clock {
+  width: 100%;
+  height: 8px;
+  margin-top: 6px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--surface-2);
+}
+
+.clock-fill {
+  width: 100%;
+  height: 100%;
+  background: var(--accent);
+  transform-origin: left;
+}
+
+.clock-fill.low {
+  background: var(--danger);
+}
+
+.clock-fill.sold {
+  background: var(--muted);
+}
+
+.call {
+  min-height: 1.45em;
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.bid-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.bid {
+  display: grid;
+  gap: 1px;
+  min-height: 64px;
+  padding: 8px 4px;
+  background: var(--accent);
+  color: var(--ink);
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.bid small {
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.bid:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.bid.allin {
+  background: var(--danger);
+}
+
+.bid.allin:hover:not(:disabled) {
+  background: #ff9a8d;
+}
+
+.bid:disabled {
+  background: var(--surface-2);
+  color: var(--muted);
+}
+
+.bid-note {
+  min-height: 1.45em;
+  font-size: 0.9rem;
+}
+
+.bid-log li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 0.9rem;
+}
+
+.bid-log li:not(:first-child) {
+  color: var(--muted);
+}
+
+.bid-log .badge {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  font-size: 0.75rem;
+}
+
+.log-amount {
+  flex: none;
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.results h2 {
+  margin-bottom: 0;
+}
+
+.result-text {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.history li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.history-icon {
+  flex: none;
+  width: 32px;
+  font-size: 1.4rem;
+  line-height: 1;
+  text-align: center;
+}
+
+.info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.score {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 2px transparent;
+}
+
+.score.turn {
+  box-shadow: inset 0 0 0 2px var(--color);
+}
+
+.score .tag {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.score .won {
+  overflow-wrap: anywhere;
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+.score .big {
+  flex: none;
+  font-size: 1.2rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+}
+
+.hint {
+  font-size: 0.85rem;
+}
+
+.connection {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  padding: 8px 16px;
+  background: var(--accent);
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.toast {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  z-index: 10;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-2);
+  font-weight: 600;
+  text-align: center;
+}
+
+@media (min-width: 820px) {
+  .game {
+    grid-template-columns: minmax(0, 1fr) 300px;
+    align-items: start;
+    padding-top: 24px;
+  }
+}
