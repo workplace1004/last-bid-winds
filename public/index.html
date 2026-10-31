@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#1c1210" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#160e0c" />
     <meta name="description" content="A live auction game. The last bid takes the lot, but only the hammer reveals what it was worth. Play with friends using a room code." />
     <title>Last Bid Wins</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231c1210'/%3E%3Cg fill='%23e8b34b'%3E%3Crect x='6' y='6' width='14' height='8' rx='2' transform='rotate(-35 13 10)'/%3E%3Crect x='14' y='12' width='4' height='15' rx='2' transform='rotate(-35 16 19)'/%3E%3C/g%3E%3C/svg%3E" />
@@ -13,92 +13,186 @@
   <body>
     <div id="connection" class="connection" role="status" hidden></div>
 
-    <main id="home" class="screen narrow">
-      <header class="brand">
-        <h1>Last Bid Wins</h1>
-        <p>Bid against the clock. The last bid takes the lot, but only the hammer reveals what it was worth.</p>
-      </header>
+    <template id="rules-template">
+      <h2 class="rules-title">How to play</h2>
+      <ol class="steps">
+        <li>
+          <span class="step-icon" aria-hidden="true">💰</span>
+          <div>
+            <h3>Start with $1,000</h3>
+            <p>Everyone gets the same cash, and everyone can see what the others have left.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-icon" aria-hidden="true">🔍</span>
+          <div>
+            <h3>Judge the secret value</h3>
+            <p>Each lot shows an estimate. Its true value stays hidden until it sells.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-icon" aria-hidden="true">⏱️</span>
+          <div>
+            <h3>Beat the clock</h3>
+            <p>A lot opens with 15 seconds. Every bid resets the clock to 6 seconds.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-icon" aria-hidden="true">🔨</span>
+          <div>
+            <h3>The last bid wins</h3>
+            <p>When the clock runs out, the top bidder pays and takes the lot. With no bids, it passes unsold.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-icon" aria-hidden="true">🏆</span>
+          <div>
+            <h3>Finish with the highest worth</h3>
+            <p>Worth is your cash left plus the true value of your lots. Ties go to whoever has the most cash.</p>
+          </div>
+        </li>
+      </ol>
 
-      <label class="field" for="name">
-        Your name
-        <input id="name" maxlength="16" autocomplete="nickname" placeholder="Enter your name" />
-      </label>
-
-      <button id="create" class="primary" type="button">Create a room</button>
-
-      <div class="divider"><span>or join friends</span></div>
-
-      <div class="join-row">
-        <label class="field" for="code">
-          Room code
-          <input id="code" maxlength="4" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ABCD" />
-        </label>
-        <button id="join" class="secondary" type="button">Join</button>
+      <div class="example">
+        <h3>Know when to stop</h3>
+        <div class="example-row">
+          <span class="example-icon" aria-hidden="true">🎻</span>
+          <span>Pay $150 for a violin worth $280</span>
+          <strong class="gain-text">+$130</strong>
+        </div>
+        <div class="example-row">
+          <span class="example-icon" aria-hidden="true">🏺</span>
+          <span>Pay $400 for a vase worth $220</span>
+          <strong class="loss-text">-$180</strong>
+        </div>
       </div>
+    </template>
+
+    <main id="home" class="screen split">
+      <div class="column">
+        <header class="brand">
+          <div class="hero-gavel" aria-hidden="true">🔨</div>
+          <h1>Last Bid Wins</h1>
+          <p>Bid against the clock. The last bid takes the lot, but only the hammer reveals what it was worth.</p>
+        </header>
+
+        <ul class="facts">
+          <li>2-6 players</li>
+          <li>About 5 minutes</li>
+          <li>No sign-up</li>
+        </ul>
+
+        <section class="card form">
+          <label class="field" for="name">
+            Your name
+            <input id="name" maxlength="16" autocomplete="nickname" placeholder="Enter your name" />
+          </label>
+
+          <button id="create" class="primary" type="button">Create a room</button>
+
+          <div class="divider"><span>or join friends</span></div>
+
+          <div class="join-row">
+            <label class="field" for="code">
+              Room code
+              <input id="code" maxlength="4" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ABCD" />
+            </label>
+            <button id="join" class="secondary" type="button">Join</button>
+          </div>
+        </section>
+      </div>
+
+      <section class="card how-to" data-rules></section>
     </main>
 
-    <main id="lobby" class="screen narrow" hidden>
-      <p class="eyebrow">Room code</p>
-      <p id="lobby-code" class="room-code"></p>
-      <button id="share" class="secondary" type="button">Copy invite link</button>
+    <main id="lobby" class="screen split" hidden>
+      <div class="column">
+        <section class="card code-card">
+          <p class="eyebrow">Room code</p>
+          <p id="lobby-code" class="room-code"></p>
+          <button id="share" class="secondary" type="button">Copy invite link</button>
+        </section>
 
-      <section class="panel">
-        <h2>Players <span id="player-count"></span></h2>
-        <ul id="lobby-players" class="lobby-players"></ul>
-      </section>
+        <section class="card">
+          <h2 class="card-title">Players <span id="player-count"></span></h2>
+          <ul id="lobby-players" class="lobby-players"></ul>
+        </section>
 
-      <section class="panel">
-        <h2>How to play</h2>
-        <ol class="rules">
-          <li>Everyone starts with $1,000. A lot's true value is secret until it sells.</li>
-          <li>Every bid resets the clock to 6 seconds. When it runs out, the last bid wins.</li>
-          <li>Highest worth at the end wins: cash left plus the true value of your lots.</li>
-        </ol>
-      </section>
+        <button id="start" class="primary" type="button"></button>
+        <p id="lobby-wait" class="muted center"></p>
+        <button id="lobby-leave" class="text" type="button">Leave room</button>
+      </div>
 
-      <button id="start" class="primary" type="button"></button>
-      <p id="lobby-wait" class="muted center"></p>
-      <button id="lobby-leave" class="text" type="button">Leave room</button>
+      <section class="card how-to" data-rules></section>
     </main>
 
     <main id="game" class="screen game" hidden>
+      <header class="game-bar">
+        <span class="wordmark">Last Bid Wins</span>
+        <div id="pips" class="pips" role="img"></div>
+        <button id="help-open" class="chip" type="button">How to play</button>
+      </header>
+
       <div class="auction">
         <section id="floor" class="floor">
-          <div id="lot" class="lot">
-            <p id="lot-number" class="eyebrow"></p>
-            <div id="lot-icon" class="lot-icon" aria-hidden="true"></div>
-            <h2 id="lot-name" class="lot-name"></h2>
-            <p id="lot-estimate" class="muted"></p>
+          <div id="stage" class="stage">
+            <div id="lot" class="lot">
+              <p id="lot-number" class="eyebrow"></p>
+              <div class="lot-show">
+                <span id="ring" class="ring" aria-hidden="true"></span>
+                <div id="lot-icon" class="lot-icon" aria-hidden="true"></div>
+                <span id="gavel" class="gavel" aria-hidden="true">🔨</span>
+                <span id="stamp" class="stamp" aria-hidden="true"></span>
+              </div>
+              <h2 id="lot-name" class="lot-name"></h2>
+              <p id="lot-estimate" class="estimate"></p>
+            </div>
+
+            <div class="price">
+              <p id="price-label" class="eyebrow"></p>
+              <p id="price" class="price-amount"></p>
+              <p id="status" class="status" aria-live="polite"></p>
+              <div class="clock" aria-hidden="true"><div id="clock-fill" class="clock-fill"></div></div>
+              <p id="call" class="call"></p>
+            </div>
           </div>
 
-          <div class="price">
-            <p id="price-label" class="eyebrow"></p>
-            <p id="price" class="price-amount"></p>
-            <p id="status" class="status" aria-live="polite"></p>
-            <div class="clock" aria-hidden="true"><div id="clock-fill" class="clock-fill"></div></div>
-            <p id="call" class="call"></p>
+          <div class="bid-dock">
+            <p id="bid-note" class="muted center bid-note"></p>
+            <div id="bid-buttons" class="bid-buttons"></div>
           </div>
-
-          <div id="bid-buttons" class="bid-buttons"></div>
-          <p id="bid-note" class="muted center bid-note"></p>
-          <ul id="bid-log" class="bid-log" aria-label="Latest bids"></ul>
         </section>
 
-        <section id="results" class="panel results" hidden>
+        <section id="results" class="card results" hidden>
+          <div class="trophy" aria-hidden="true">🏆</div>
           <p id="result-text" class="result-text" aria-live="polite"></p>
-          <h2>Auction record</h2>
+          <h2 class="card-title">Auction record</h2>
           <ul id="history" class="history"></ul>
         </section>
       </div>
 
       <aside class="side">
-        <ul id="scores" class="scores"></ul>
-        <p class="muted hint">Worth = cash left + true value of lots won.</p>
+        <section class="card">
+          <h2 class="card-title">Standings</h2>
+          <ul id="scores" class="scores"></ul>
+          <p class="muted hint">Worth = cash left + true value of lots won.</p>
+        </section>
+        <section id="live-bids" class="card">
+          <h2 class="card-title">Latest bids</h2>
+          <ul id="bid-log" class="bid-log" aria-label="Latest bids"></ul>
+        </section>
         <button id="again" class="primary" type="button" hidden>Play again</button>
         <p id="again-wait" class="muted center" hidden>Waiting for the host to start another round.</p>
         <button id="game-leave" class="text" type="button">Leave game</button>
       </aside>
     </main>
+
+    <dialog id="help" class="help" aria-label="How to play">
+      <div class="help-body">
+        <div data-rules></div>
+        <button id="help-close" class="primary" type="button">Back to the auction</button>
+      </div>
+    </dialog>
 
     <div id="toast" class="toast" role="alert" hidden></div>
   </body>

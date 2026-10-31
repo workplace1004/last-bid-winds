@@ -47,6 +47,7 @@ The tension comes from three things: paying more than a lot is worth loses money
 | **Bids are absolute amounts, not "+10"** | If two players tap at once, the second gets `bid_too_low` instead of silently paying more than the amount on their button. |
 | **Arrival order at the server decides** | A bid counts if it is processed before the hammer timer runs. There is one clear rule and no client timestamps to forge. |
 | **Full snapshot after every change** | There is no sync logic to get wrong. A reconnecting player just gets the latest snapshot. |
+| **Animations come from comparing snapshots** | The client compares each snapshot with the previous one, so effects stay visual only, a reconnect does not replay them, and `prefers-reduced-motion` can turn them off. |
 | **Time left is sent, not a clock time** | Wrong clocks on players' devices cannot affect the countdown. |
 | **Randomness is passed into `game.js`** | The rules stay pure, so tests can use fixed lots and values. |
 | **Layers: `game` -> `rooms` -> `index`** | Each layer can be tested alone. |
